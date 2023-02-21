@@ -25,42 +25,42 @@ For Skill Factory study project (PR03)
 
 09. Выполняем проверку ssh-доступности управляющих хостов с помощью команды:
 
-		$ ansible all -m ping
-   
+    $ ansible all -m ping
+
     при этом должен быть получен ответ вида:
 
 <pre>
 158.160.21.37 | SUCCESS => {
-	"ansible_facts": {
-		"discovered_interpreter_python": "/usr/bin/python3"
-	},
-	"changed": false,
-	"ping": "pong"
+        "ansible_facts": {
+                "discovered_interpreter_python": "/usr/bin/python3"
+        },
+        "changed": false,
+        "ping": "pong"
 }
 158.160.12.167 | SUCCESS => {
-	"ansible_facts": {
-		"discovered_interpreter_python": "/usr/bin/python3"
-	},
-	"changed": false,
-	"ping": "pong"
+        "ansible_facts": {
+                "discovered_interpreter_python": "/usr/bin/python3"
+        },
+        "changed": false,
+        "ping": "pong"
 }
 51.250.111.8 | SUCCESS => {
-	"ansible_facts": {
-		"discovered_interpreter_python": "/usr/libexec/platform-python"
-	},
-	"changed": false,
-	"ping": "pong"
+        "ansible_facts": {
+                "discovered_interpreter_python": "/usr/libexec/platform-python"
+        },
+        "changed": false,
+        "ping": "pong"
 }
 </pre>
-	
-   
-10. Применяем Ansible роли "postrgresql" и "docker" через плейбук /playbooks/deploy_docker_postgre.yml 
-    к группам "database", "app", "web" управляемых хостов описанных в inventory файле /ansible/hosts
-	с помощью команды:
 
-		$ ansible-playbook /etc/ansible/playbooks/deploy_docker_postgre.yml
-   
-	в результате должен быть получен ответ вида:
+
+10. Применяем Ansible роли "postrgresql" и "docker" через плейбук /playbooks/deploy_docker_postgre.yml
+    к группам "database", "app", "web" управляемых хостов описанных в inventory файле /ansible/hosts
+    с помощью команды:
+
+        $ ansible-playbook /etc/ansible/playbooks/deploy_docker_postgre.yml
+
+    в результате должен быть получен ответ вида:
 
 <pre>
 PLAY [app] ************************************************************************************************************************
@@ -139,38 +139,38 @@ changed: [51.250.111.8]
 
 TASK [docker : debug] *************************************************************************************************************
 ok: [158.160.21.37] => {
-	"os_version.stdout_lines": [
-		"Ubuntu 20.04.5 LTS"
-	]
+        "os_version.stdout_lines": [
+                "Ubuntu 20.04.5 LTS"
+        ]
 }
 ok: [51.250.111.8] => {
-	"os_version.stdout_lines": [
-		"CentOS Stream 8"
-	]
+        "os_version.stdout_lines": [
+                "CentOS Stream 8"
+        ]
 }
 
 TASK [docker : debug] *************************************************************************************************************
 ok: [158.160.21.37] => {
-	"docker_out1.stdout_lines": [
-		"Docker version 23.0.1, build a5ee5b1"
-	]
+        "docker_out1.stdout_lines": [
+                "Docker version 23.0.1, build a5ee5b1"
+        ]
 }
 ok: [51.250.111.8] => {
-	"docker_out1.stdout_lines": [
-		"Docker version 23.0.1, build a5ee5b1"
-	]
+        "docker_out1.stdout_lines": [
+                "Docker version 23.0.1, build a5ee5b1"
+        ]
 }
 
 TASK [docker : debug] *************************************************************************************************************
 ok: [158.160.21.37] => {
-	"docker_out2.stdout_lines": [
-		"Hello from Docker!"
-	]
+        "docker_out2.stdout_lines": [
+                "Hello from Docker!"
+        ]
 }
 ok: [51.250.111.8] => {
-	"docker_out2.stdout_lines": [
-		"Hello from Docker!"
-	]
+        "docker_out2.stdout_lines": [
+                "Hello from Docker!"
+        ]
 }
 
 PLAY [database] *******************************************************************************************************************
@@ -183,10 +183,10 @@ skipping: [158.160.12.167]
 
 TASK [postgresql : Print test vars from inventory] ********************************************************************************
 ok: [158.160.12.167] => {
-	"msg": [
-		"INFO: PostgreSQL version to be installed..: 13",
-		"INFO: PostgreSQL new database path will be: /opt/databases/postgresql"
-	]
+        "msg": [
+                "INFO: PostgreSQL version to be installed..: 13",
+                "INFO: PostgreSQL new database path will be: /opt/databases/postgresql"
+        ]
 }
 
 TASK [postgresql : Ubuntu(20) - Import the GPG signing key for the postgresql repository] *****************************************
@@ -212,7 +212,7 @@ changed: [158.160.12.167]
 
 TASK [postgresql : Debug - Print new dtabase path param] **************************************************************************
 ok: [158.160.12.167] => {
-	"msg": "INFO - PostgreSQL new database path param data_directory = '/opt/databases/postgresql/13/main'"
+        "msg": "INFO - PostgreSQL new database path param data_directory = '/opt/databases/postgresql/13/main'"
 }
 
 TASK [postgresql : PostgreSQL - Set conf param (data_directory)] ******************************************************************
@@ -238,30 +238,30 @@ changed: [158.160.12.167]
 
 TASK [postgresql : debug] *********************************************************************************************************
 ok: [158.160.12.167] => {
-	"os_version.stdout_lines": [
-		"Ubuntu 20.04.5 LTS"
-	]
+        "os_version.stdout_lines": [
+                "Ubuntu 20.04.5 LTS"
+        ]
 }
 
 TASK [postgresql : debug] *********************************************************************************************************
 ok: [158.160.12.167] => {
-	"pg_service_status.stdout_lines": [
-		"     Active: active (exited) since Tue 2023-02-21 11:26:14 UTC; 52s ago"
-	]
+        "pg_service_status.stdout_lines": [
+                "     Active: active (exited) since Tue 2023-02-21 11:26:14 UTC; 52s ago"
+        ]
 }
 
 TASK [postgresql : debug] *********************************************************************************************************
 ok: [158.160.12.167] => {
-	"pg_installed_version_from_file.stdout_lines": [
-		"13"
-	]
+        "pg_installed_version_from_file.stdout_lines": [
+                "13"
+        ]
 }
 
 TASK [postgresql : debug] *********************************************************************************************************
 ok: [158.160.12.167] => {
-	"pg_installed_version_from_bin.stdout_lines": [
-		"postgres (PostgreSQL) 13.10 (Ubuntu 13.10-1.pgdg20.04+1)"
-	]
+        "pg_installed_version_from_bin.stdout_lines": [
+                "postgres (PostgreSQL) 13.10 (Ubuntu 13.10-1.pgdg20.04+1)"
+        ]
 }
 
 RUNNING HANDLER [postgresql : postgresql_restart] *********************************************************************************
@@ -277,57 +277,58 @@ PLAY RECAP *********************************************************************
 11. Далее последовательно подключаясь к хостам VM1,VM2,VM3 выполняем серию тестов для проверки результата
     установки ПО на сервера (справа за двойной решоткой показан результат вывода):
 <pre>
-	..проверяем результат на [VM1]
-	  этот (Ubuntu 20) хост входит в группу [database] поэтому на нем должен быть установлена PosgreSQL
-	  указанной в inventory версии (13) и измененным каталогом размещения баз данных (/opt/databases/postgresql)
+..проверяем результат на [VM1] (Ubuntu 20)
+  *этот хост входит в группу [database] поэтому на нем должен быть установлена PosgreSQL
+   указанной в inventory версии (13) и измененным каталогом размещения баз данных (/opt/databases/postgresql)
 
-		$ ssh -i ~/.ssh/id_ed25519 ubuntu@158.160.12.167 							## подключаемся к VM1
-		$ su devops
-		$ whoami																	## devops
-		$ cd ~; pwd																	## /home/devops
+    $ ssh -i ~/.ssh/id_ed25519 ubuntu@158.160.12.167            ## подключаемся к VM1
+    $ su devops
+    $ whoami                                                    ## devops
+    $ cd ~; pwd                                                 ## /home/devops
 
-		$ systemctl status postgresql | grep Active									## Active: active (exited) since Tue 2023-02-21 11:27:14 UTC; 5min ago
-		$ /usr/lib/postgresql/13/bin/postgres -V									## postgres (PostgreSQL) 13.10 (Ubuntu 13.10-1.pgdg20.04+1)
-		$ sudo ls -la /opt/databases/postgresql/13/main/PG_VERSION					## -rw------- 1 postgres postgres 3 Feb 21 11:26 /opt/databases/postgresql/13/main/PG_VERSION
+    $ systemctl status postgresql | grep Active                 ## Active: active (exited) since Tue 2023-02-21 11:27:14 UTC; 5min ago
+    $ /usr/lib/postgresql/13/bin/postgres -V                    ## postgres (PostgreSQL) 13.10 (Ubuntu 13.10-1.pgdg20.04+1)
+    $ sudo ls -la /opt/databases/postgresql/13/main/PG_VERSION  ## -rw------- 1 postgres postgres 3 Feb 21 11:26 /opt/databases/postgresql/13/main/PG_VERSION
 
-		$ sudo -u postgres psql -c "SELECT version();" | grep PostgreSQL			## PostgreSQL 13.10 (Ubuntu 13.10-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
-		$ sudo -u postgres psql -c "SHOW data_directory;" | grep postgresql			## /opt/databases/postgresql/13/main
+    $ sudo -u postgres psql -c "SELECT version();" | grep PostgreSQL     ## PostgreSQL 13.10 (Ubuntu 13.10-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+    $ sudo -u postgres psql -c "SHOW data_directory;" | grep postgresql  ## /opt/databases/postgresql/13/main
 
-	..проверяем результат на [VM2] (Ubuntu 20)
-	  этот хост входит в группу [app] поэтому на нем должен быть установлен Docker
+..проверяем результат на [VM2] (Ubuntu 20)
+  *этот хост входит в группу [app] поэтому на нем должен быть установлен Docker
 
-		$ ssh -i ~/.ssh/id_ed25519 ubuntu@158.160.12.167 							## подключаемся к VM1 (Ubuntu 22.04) с авторизацией по ssh-ключу, логину и паролю
-		$ su devops
-		$ whoami																	## devops
-		$ cd ~; pwd																	## /home/devops
+    $ ssh -i ~/.ssh/id_ed25519 ubuntu@158.160.12.167            ## подключаемся к VM1 (Ubuntu 22.04) с авторизацией по ssh-ключу, логину и паролю
+    $ su devops
+    $ whoami                                                                                                                                     ## devops
+    $ cd ~; pwd                                                                                                                                  ## /home/devops
 
-		$ ssh devops@158.160.21.37													## подключаемся к VM2 (Ubuntu 22.04) с авторизацией по ssh-ключу
-		$ curl 2ip.ru																## 158.160.21.37
-		$ hostname																	## ubuntu2
-		$ whoami																	## devops
+    $ ssh devops@158.160.21.37                                                                                                   ## подключаемся к VM2 (Ubuntu 22.04) с авторизацией по ssh-ключу
+    $ curl 2ip.ru                                                                                                                                ## 158.160.21.37
+    $ hostname                                                                                                                                   ## ubuntu2
+    $ whoami                                                                                                                                     ## devops
 
-		$ hostnamectl | grep System | awk '{print $3" "$4" "$5}'					## Ubuntu 20.04.5 LTS
-		$ docker --version															## Docker version 23.0.1, build a5ee5b1
-		$ systemctl status docker | grep Active										## Active: active (running) since Tue 2023-02-21 11:23:01 UTC; 28min ago
-		$ docker run hello-world | grep Hello										## Hello from Docker!
-		$ exit																		## logout. Connection to 158.160.21.37 closed.
+    $ hostnamectl | grep System | awk '{print $3" "$4" "$5}'    ## Ubuntu 20.04.5 LTS
+    $ docker --version                                                                                                                  ## Docker version 23.0.1, build a5ee5b1
+    $ systemctl status docker | grep Active                     ## Active: active (running) since Tue 2023-02-21 11:23:01 UTC; 28min ago
+    $ docker run hello-world | grep Hello                       ## Hello from Docker!
+    $ exit                                                                                                                              ## logout. Connection to 158.160.21.37 closed.
 
+..проверяем результат на [VM3] (CentOS 8)
+  *этот хост входит в группу [app] поэтому на нем должен быть установлен Docker
 
-	..проверяем результат на [VM3] (CentOS 8)
-	  этот хост входит в группу [app] поэтому на нем должен быть установлен Docker
+    $ ssh devops@51.250.111.8                                                                                                       ## подключаемся к VM3 (CentOS Stream 8) с авторизацией по ssh-ключу
+    $ curl 2ip.ru                                                                                                                       ## 51.250.111.8
+    $ hostname                                                                                                                          ## centos8
+    $ whoami                                                                                                                            ## devops
 
-		$ ssh devops@51.250.111.8													## подключаемся к VM3 (CentOS Stream 8) с авторизацией по ssh-ключу
-		$ curl 2ip.ru																## 51.250.111.8
-		$ hostname																	## centos8
-		$ whoami																	## devops
-
-		$ hostnamectl | grep System | awk '{print $3" "$4" "$5}'					## CentOS Stream 8
-		$ docker --version															## Docker version 23.0.1, build a5ee5b1
-		$ systemctl status docker | grep Active										## Active: active (running) since Tue 2023-02-21 11:23:22 UTC; 32min ago
-		$ docker run hello-world | grep Hello										## Hello from Docker!
-		$ exit																		## logout. Connection to 51.250.111.8 closed.
+    $ hostnamectl | grep System | awk '{print $3" "$4" "$5}'     ## CentOS Stream 8
+    $ docker --version                                                                                                                  ## Docker version 23.0.1, build a5ee5b1
+    $ systemctl status docker | grep Active                      ## Active: active (running) since Tue 2023-02-21 11:23:22 UTC; 32min ago
+    $ docker run hello-world | grep Hello                        ## Hello from Docker!
+    $ exit                                                                                                                              ## logout. Connection to 51.250.111.8 closed.
 </pre>
 
 --ПРИМЕЧАНИЕ:
-Кривое оформление - это претензии к GitHub - они до сих пор не могут добавить обычный машинописный шрифт 
-чтобы при копипасте из текстового файла ничео не сьезжало
+Кривое оформление - это претензии к GitHub - они до сих пор не могут добавить обычный машинописный (console или typewriter) шрифт
+чтобы при копипасте из текстового файла ничего не сьезжало!
+Про язык разметки GitHub знаю и считают это ПОЛНЫМ бредом размечать простой текст специальными тегами!
+
