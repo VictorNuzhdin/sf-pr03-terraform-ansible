@@ -4,14 +4,16 @@ For Skill Factory study project (PR03)
 
 --КРАТКАЯ ИНСТРУКЦИЯ
 
-01. Размещаем содержимое каталогов "terraform" и "ansible" в свое настроенное Terraform и Ansible окружение;
+01. Размещаем содержимое каталогов [terraform](terraform) и [ansible](ansible) в свое настроенное Terraform и Ansible окружение;
 
-02. Создаем облачные ресурсы Yandex.Cloud с помощью Terraform конфигурации /terraform/main.tf
+02. Создаем облачные ресурсы Yandex.Cloud с помощью Terraform конфигурации [terraform/main.tf](/terraform/main.tf)
     и последовательно выполняемых команд "terraform validate", "terraform plan", "terraform apply";
     В результате получаем сформированный локальный Terraform state
-    и Terraform output переменные описанные в кофигурации /terraform/output.tf
-    В частности получаем публичные адреса созданных ресурсов
-    которые изображены на скриншотах в каталоге /_screens;
+    и Terraform output переменные описанные в конфигурации [terraform/output.tf](/terraform/output.tf)
+    В частности получаем публичные адреса созданных ВМ
+    которые изображены на скриншоте в каталоге [_screens](_screens):
+    [виртуальные машины](_screens/yandex-cloud__3_compute-instances__20230221_181240.png)
+
 
 03. Подключаемся к управляющему хосту VM1 (Ubuntu 20.04) по ssh, создаем пользователя "devops" с sudo правами;
 04. Подключаемся к управляемому хосту VM2 (Ubuntu 20.04) по ssh, создаем пользователя "devops" с sudo правами;
@@ -19,9 +21,9 @@ For Skill Factory study project (PR03)
 
 06. Настраиваем авторизацию по ssh-ключам с хоста VM1 на хосты VM2, VM3 без запроса парольной фразы;
 
-07. Переносим на VM1 конфигурацию из каталога /ansible;
+07. Переносим на VM1 конфигурацию из каталога [ansible](/ansible);
 
-08. Открывам inventory файл /ansible/hosts и вносим в него публичные ip-адреса созданных в (2) ресурсов;
+08. Открывам inventory файл [ansible/hosts](/ansible/hosts) и вносим в него публичные ip-адреса созданных в (2) ресурсов;
 
 09. Выполняем проверку ssh-доступности управляющих хостов с помощью команды:
 
