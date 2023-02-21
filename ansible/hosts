@@ -1,0 +1,32 @@
+# Hosts
+[vm1]
+158.160.12.167
+
+[vm2]
+158.160.21.37
+
+[vm3]
+51.250.111.8
+
+
+## Hosts groups
+[all:children]
+vm1
+vm2
+vm3
+
+[database:children]
+vm1
+
+[web:children]
+vm1
+
+[app:children]
+vm2
+vm3
+
+
+## Hosts variables (hostvars)
+[database:vars]
+postgresql_install_version=13
+postgresql_db_path=/opt/databases/postgresql

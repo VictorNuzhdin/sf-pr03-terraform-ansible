@@ -1,0 +1,16 @@
+---
+# playbook file for servers
+#
+# Play1: Application servers
+- hosts: app
+  gather_facts: yes
+  become: true
+  roles:
+    - name: docker
+
+# Play2: Database servers
+- hosts: database
+  gather_facts: yes
+  become: true
+  roles:
+    - name: postgresql

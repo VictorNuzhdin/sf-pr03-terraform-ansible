@@ -1,0 +1,141 @@
+---
+# tasks file for postgresql
+#
+## Check if PostgreSQL version or database path is set
+- fail:
+    msg: "You must set PostgreSQL install Version and database Path in inventory/hosts file"
+  when: |
+    ((postgresql_install_version == '') or (postgresql_install_version is not defined)) or
+    ((postgresql_db_path == '') or (postgresql_db_path is not defined))
+
+## Print inventory variables
+- name: Print test vars from inventory
+  debug: # ansible.builtin.debug
+    msg:
+      - 'INFO: PostgreSQL version to be installed..: {{ postgresql_install_version }}'
+      - 'INFO: PostgreSQL new database path will be: {{ postgresql_db_path }}'
+
+
+## BLOCK: OS Dependend steps: for Ubuntu 20 only
+- block:
+  ## Install Repo for latest PostgreSQL versions
+  - name: Ubuntu(20) - Import the GPG signing key for the postgresql repository
+    apt_key:
+      url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+      state: present
+    become: true
+
+  - name: Ubuntu(20) - Add postgresql repository to local apt db
+    apt_repository:
+      repo: "deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main"
+      state: present
+    become: true
+
+  - name: Ubuntu(20) - Update local packages cache before install
+    apt:
+      update_cache: yes
+    become: true
+
+  ## Install PostgreSQL
+  - name: Ubuntu(20) - Install PostgreSQL {{ postgresql_install_version }}
+    apt:
+      name: "postgresql-{{ postgresql_install_version }}"
+      state: present
+      update_cache: yes
+    become: true
+
+  ## Set firewall rules (open 5432 tcp port)
+  - name: Ubuntu(20) - Open firewall port 5432 tcp
+    shell: |
+      ufw allow 5432/tcp
+      exit 0
+
+  # End block: start execution condition
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_major_version'] == "20"
+
+
+## BLOCK: Change PostgreSQL settings and restart postgresql service
+- block:
+  ## Create new database directory
+  #  postgresql_db_path=/opt/databases/postgresql
+  - name: PostgreSQL - Create new directory for databases
+    shell: "mkdir -p {{ postgresql_db_path }}"
+    args:
+      warn: false
+
+  ## Set permissions to new database directory
+  ## postgresql_db_path=/opt/databases/postgresql
+  - name: PostgreSQL - Apply recursive permissions to new database directory
+    file:
+      path: "{{ postgresql_db_path }}"
+      state: directory
+      recurse: yes
+      owner: postgres
+      group: postgres
+      mode: "g-rwx,o-rwx"
+
+  ## Debug output
+  #  data_directory = '/opt/databases/postgresql'
+  - name: Debug - Print new dtabase path param
+    debug: # ansible.builtin.debug
+      msg: INFO - PostgreSQL new database path param data_directory = '{{ postgresql_db_path }}/{{ postgresql_install_version }}/main'
+
+  #- name: PostgreSQL - Stop service
+  #  service: #ansible.builtin.service
+  #  name: postgresql
+  #  state: stopped
+
+  ## Change config settings - Set new database path
+  #  /etc/postgresql/13/main/postgresql.conf
+  - name: PostgreSQL - Set conf param (data_directory)
+    lineinfile:
+      dest: "/etc/postgresql/{{ postgresql_install_version }}/main/postgresql.conf"
+      regexp: "^data_directory = "
+      line: "data_directory = '{{ postgresql_db_path }}/{{ postgresql_install_version }}/main'"
+
+  ## Changing config settings - Set listening interfaces to all
+  #  /etc/postgresql/13/main/postgresql.conf
+  - name: PostgreSQL - Set conf param (listen_addresses)
+    lineinfile:
+      dest: "/etc/postgresql/{{ postgresql_install_version }}/main/postgresql.conf"
+      regexp: "^#listen_addresses = "
+      line: "listen_addresses = '*'"
+
+  ## Copy system databases to new location & rename old database directory
+  #  /var/lib/postgresql/13/main >> /opt/databases/postgresql/13/main
+  - name: PostgreSQL - Copy system databases to new location
+    shell: |
+      rsync -av /var/lib/postgresql/ /opt/databases/postgresql
+      mv /var/lib/postgresql/{{ postgresql_install_version }}/main /var/lib/postgresql/{{ postgresql_install_version }}/main.bak
+      exit 0
+    # Call handler
+    notify: postgresql_restart
+
+
+## Get result Info
+#
+# Debug outputs
+- name: Debug - Get OS version (Debian like)
+  shell: hostnamectl | grep System | awk '{print $3" "$4" "$5}'
+  register: os_version
+
+- name: Debug - Get PostgreSQL service status
+  shell: systemctl status postgresql | grep Active
+  register: pg_service_status
+
+- name: Debug - Get PostgreSQL installed version (from file)
+  #shell: "cat /var/lib/postgresql/{{ postgresql_install_version }}/main/PG_VERSION"
+  shell: "cat {{ postgresql_db_path }}/{{ postgresql_install_version }}/main/PG_VERSION"
+  register: pg_installed_version_from_file
+
+- name: Debug - Get PostgreSQL installed version (from bin)
+  shell: "/usr/lib/postgresql/13/bin/postgres -V"
+  register: pg_installed_version_from_bin
+
+# Catch and print outputs
+- debug: var=os_version.stdout_lines
+- debug: var=pg_service_status.stdout_lines
+- debug: var=pg_installed_version_from_file.stdout_lines
+- debug: var=pg_installed_version_from_bin.stdout_lines

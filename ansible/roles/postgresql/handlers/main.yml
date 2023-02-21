@@ -1,0 +1,13 @@
+---
+# handlers file for postgresql
+#
+# Restart PostgreSQL service
+- name: postgresql_restart
+  service: #ansible.builtin.service
+    name: postgresql
+    state: restarted
+
+# Restart PostgreSQL service (test)
+- name: postgresql_restart_test
+  debug: # ansible.builtin.debug
+    msg: INFO - New configuration has been applied
